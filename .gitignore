@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+
+# Contest run artifacts (if you keep working files alongside the skills)
+work/
+*.aux
+*.log
+*.out
+
+# OS
+.DS_Store
+Thumbs.db

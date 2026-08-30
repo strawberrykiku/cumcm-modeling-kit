@@ -26,8 +26,10 @@ cumcm-modeling-kit/
 │   └── cumcm-award-gate/         # 新增 · 交卷前把关
 │       ├── SKILL.md
 │       └── scripts/              # figqa.py + pdf_qa.sh（来自 mathodology）
-└── workflows/
-    └── cumcm-pipeline.md         # 三段式流程编排
+├── workflows/
+│   └── cumcm-pipeline.md         # 三段式流程编排
+└── templates/
+    └── cumcm-latex/              # 国赛 LaTeX 论文模板（匿名版）+ 编译说明
 ```
 
 ## 安装
@@ -88,7 +90,7 @@ npx skills add strawberrykiku/cumcm-modeling-kit --skill '*'
 
 ### 它不会替你做的
 
-- **不会一键生成排版好、能直接交的成品 PDF**——最后的 LaTeX/Word 组装和编译要你（在它帮助下）完成。
+- **不会一键生成排版好、能直接交的成品 PDF**——但仓库自带 `templates/cumcm-latex/`（匿名版国赛 LaTeX 模板 + 编译说明），把 paper 生成的各章内容填进去、用 XeLaTeX 连编两次即可；最后这步的组装与编译由你（在它帮助下）完成。
 - 替不了你理解：评审会查代码与论文一致性、也看 AI 痕迹，比赛是你自己的作品。它加速你、兜住漏洞，但你得看懂并对交出去的东西负责。
 
 ## 致谢与许可

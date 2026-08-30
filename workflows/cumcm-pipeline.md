@@ -66,6 +66,10 @@
 4. 附录代码跑不起来、或和论文不一致 →（清单 F，可能直接取消资格）
 5. 论文里漏了学校/姓名没匿名 →（清单 H）
 
+## 排版成 PDF
+
+论文正文写完后，用仓库自带的 `templates/cumcm-latex/main.tex`（匿名版国赛模板）排版：把各章内容填进去，用 **XeLaTeX 连编两次**。编译说明与依赖见 `templates/cumcm-latex/README.md`。交卷前用 `cumcm-award-gate` 的 `pdf_qa.sh --anonymous` 扫一遍匿名性。
+
 ## 安装与加载
 
 见仓库根目录 `README.md`。三个 skill 装到 `~/.claude/skills/` 后，Claude Code 会按各自 description 在合适的时候自动加载。

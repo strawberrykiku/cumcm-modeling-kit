@@ -1,0 +1,202 @@
+% !TEX program = xelatex
+% ============================================================
+% 全国大学生数学建模竞赛(CUMCM) 论文模板 —— 匿名版
+% 编译：xelatex main.tex（建议连编两次，生成目录/交叉引用/页码）
+% 依赖包（TeX Live / CTeX 完整安装均自带）：
+%   ctex geometry setspace amsmath amssymb bm graphicx booktabs
+%   caption algorithm algpseudocode listings xcolor fancyhdr hyperref
+% 匿名要求：正文不得出现学校、姓名、指导教师、学号、联系方式。
+% ============================================================
+\documentclass[12pt, a4paper]{ctexart}
+
+% ---------- 页面与行距 ----------
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+
+% ---------- 数学 ----------
+\usepackage{amsmath,amssymb,bm}
+
+% ---------- 图表 ----------
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{caption}
+\captionsetup[figure]{name=图}
+\captionsetup[table]{name=表}
+% 约定：表标题在表上方，图标题在图下方（由 \caption 的位置决定）。
+
+% ---------- 算法伪代码 ----------
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\floatname{algorithm}{算法}
+
+% ---------- 代码附录 ----------
+\usepackage{xcolor}
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue!70!black},
+  commentstyle=\color{gray},
+  stringstyle=\color{orange!80!black},
+  numbers=left, numberstyle=\tiny\color{gray},
+  breaklines=true, frame=single, tabsize=4, showstringspaces=false,
+}
+% 注意：listings 下的中文注释可能显示异常，建议附录代码注释用英文。
+
+% ---------- 页眉页脚（匿名：不出现任何身份信息）----------
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+% ---------- 超链接 ----------
+\usepackage[hidelinks]{hyperref}
+
+\title{\textbf{基于 XXX 的 XXX 模型}}   % 点明研究对象+核心方法，勿抄赛题原标题
+\author{}   % 匿名：留空，不得写学校/姓名/指导教师
+\date{}
+
+\begin{document}
+
+% 国赛提交时的编号页由组委会系统/当年模板生成；正文（本文件）保持匿名。
+\maketitle
+\thispagestyle{fancy}
+
+% ================= 摘要 =================
+\begin{center}\textbf{\zihao{4} 摘\quad 要}\end{center}
+
+% 红线：每个子问题都要有量化结果（每问必有一数）。
+% 结构：背景1句 → 总体思路1句 → 各问(方法+数值结果) → 检验/亮点 → 关键词
+本文针对……问题，建立了……模型。针对问题一，……，得到……（务必给出具体数值）。
+针对问题二，……。针对问题三，……。经灵敏度分析与误差分析验证，模型……。
+
+\vspace{1em}
+\noindent\textbf{关键词：}\quad 关键词一；关键词二；关键词三；关键词四
+
+\newpage
+\tableofcontents   % 可选，国赛不强制；用了要连编两次
+\newpage
+
+% ================= 正文 =================
+\section{问题重述}
+\subsection{问题背景}
+……（用自己的语言概括背景，不要复制题目原文）
+
+\subsection{问题提出}
+本文需要解决以下问题：
+\begin{itemize}
+  \item 问题一：……
+  \item 问题二：……
+\end{itemize}
+
+\section{问题分析}
+% 红线：讲"为什么选这个模型"，而不是"我们将用 A 方法做 X"。
+\subsection{问题一分析}
+……（数学本质是什么？为什么选这个模型？对比了哪种替代方案？）
+
+\begin{figure}[htbp]
+  \centering
+  % \includegraphics[width=0.8\textwidth]{figures/flowchart.pdf}
+  \caption{整体建模流程图}
+  \label{fig:flow}
+\end{figure}
+
+\section{模型假设}
+% 红线：每条假设都要在后文用到；禁止"数据真实可靠"这类废话假设。
+\begin{enumerate}
+  \item 假设……。理由：……。
+  \item 假设……。理由：……。
+\end{enumerate}
+
+\section{符号说明}
+\begin{table}[htbp]
+  \centering
+  \caption{符号说明}
+  \begin{tabular}{clc}
+    \toprule
+    符号 & 含义 & 单位 \\
+    \midrule
+    $x_i$ & …… & —— \\
+    $T$   & …… & s \\
+    \bottomrule
+  \end{tabular}
+  \label{tab:notation}
+\end{table}
+
+\section{问题一模型的建立与求解}
+% 六步：目标 → 选型理由 → 公式(本题适配) → 参数 → 求解 → 结果(表+图) → 分析
+\subsection{模型的建立}
+根据……，建立如下模型：
+\begin{equation}
+  \min\ f(\bm{x})=\sum_{i=1}^{n} c_i x_i, \quad \text{s.t.}\ g(\bm{x})\le 0 .
+  \label{eq:model1}
+\end{equation}
+式中各符号含义见表~\ref{tab:notation}。
+
+\subsection{模型的求解}
+采用……算法求解，流程见算法~\ref{alg:1}。
+\begin{algorithm}[htbp]
+\caption{……求解算法}\label{alg:1}
+\begin{algorithmic}[1]
+\Require 输入：……
+\Ensure 输出：……
+\State 初始化……
+\While{未收敛}
+  \State 更新……
+\EndWhile
+\State \Return 最优解
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{结果与分析}
+求解得到……（给出具体数值结果）。% 红线：每个图表后必须有解释。
+
+\subsubsection{灵敏度分析}
+对关键参数做 $\pm 10\%$、$\pm 20\%$ 扰动，结果表明……，模型稳健。
+
+\section{问题二模型的建立与求解}
+（同问题一结构：建立 → 求解 → 结果与分析 → 灵敏度/误差分析。每问末尾嵌检验。）
+
+\section{模型的评价与改进}
+% 红线：评价"本模型"，不是评价"所用算法"。
+\subsection{模型的优点}
+\begin{enumerate}
+  \item ……
+\end{enumerate}
+\subsection{模型的缺点}
+\begin{enumerate}
+  \item ……（承认本模型具体建模选择的局限，不写放之四海皆准的话）
+\end{enumerate}
+\subsection{模型的改进方向}
+……
+
+% ================= 参考文献 =================
+\begin{thebibliography}{99}
+% GB/T 7714 格式；红线：≥6 条，禁止 CSDN/知乎/百度百科/AI 工具作为来源。
+% 专著[M]：作者. 书名[M]. 版次. 出版地: 出版社, 年.
+% 期刊[J]：作者. 题名[J]. 刊名, 年, 卷(期): 起-止页.
+\bibitem{ref1} 姜启源, 谢金星, 叶俊. 数学模型[M]. 5版. 北京: 高等教育出版社, 2018.
+\bibitem{ref2} 作者甲, 作者乙. 论文题目[J]. 期刊名, 2022, 40(3): 12-20.
+\bibitem{ref3} Author C, Author D. Paper title[J]. Journal Name, 2021, 15(2): 100-115.
+\end{thebibliography}
+
+% ================= 附录 =================
+\newpage
+\section*{附录 A\quad 问题一求解源代码（Python）}
+\addcontentsline{toc}{section}{附录 A}
+% 2026 国赛规则：缺必要源程序或程序不能运行，可能取消评奖资格。放完整可运行代码。
+\begin{lstlisting}[language=Python]
+import numpy as np
+
+# Solution code for Problem 1.
+# Keep code comments in English to avoid CJK glyph issues in listings;
+# match variable names to the symbols used in the paper body.
+def solve():
+    pass
+\end{lstlisting}
+
+\end{document}
+
+
+

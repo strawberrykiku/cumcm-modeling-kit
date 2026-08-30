@@ -35,7 +35,7 @@ cumcm-modeling-kit/
 Claude Code 只扫描 `~/.claude/skills/<name>/SKILL.md`（一层目录）。把三个 skill 目录放进去：
 
 ```bash
-git clone https://github.com/applekiku/cumcm-modeling-kit.git /tmp/cumcm-kit
+git clone https://github.com/strawberrykiku/cumcm-modeling-kit.git /tmp/cumcm-kit
 cp -r /tmp/cumcm-kit/skills/math-modeling-solver ~/.claude/skills/
 cp -r /tmp/cumcm-kit/skills/math-modeling-paper  ~/.claude/skills/
 cp -r /tmp/cumcm-kit/skills/cumcm-award-gate     ~/.claude/skills/

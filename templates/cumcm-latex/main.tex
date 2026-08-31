@@ -1,99 +1,153 @@
 % !TEX program = xelatex
-% ============================================================
-% 全国大学生数学建模竞赛(CUMCM) 论文模板 —— 匿名版
-% 编译：xelatex main.tex（建议连编两次，生成目录/交叉引用/页码）
-% 依赖包（TeX Live / CTeX 完整安装均自带）：
-%   ctex geometry setspace amsmath amssymb bm graphicx booktabs
-%   caption algorithm algpseudocode listings xcolor fancyhdr hyperref
-% 匿名要求：正文不得出现学校、姓名、指导教师、学号、联系方式。
-% ============================================================
+% ================================================================
+% 全国大学生数学建模竞赛 论文模板（匿名版）
+% 已对齐《全国大学生数学建模竞赛论文格式规范（2026 年修订稿）》
+% ----------------------------------------------------------------
+% 编译：XeLaTeX，连编两次（生成页码与交叉引用）
+% Overleaf：新建项目 → 上传本文件 → Menu → Compiler 选 XeLaTeX
+% ----------------------------------------------------------------
+% 模板已固化的官方硬性要求：
+%   · A4 纸，上下左右页边距均 2.5 cm
+%   · 电子版首页即摘要页；不放承诺书、编号专用页、自制封面、目录
+%   · 页码从摘要页起编为第 1 页，置于页脚中部
+%   · 摘要含标题与关键词，原则上不超过一页；无需英文摘要
+%   · 正文不超过 30 页；附录页数不限
+%   · 图题在图下方，表题在表上方，均五号(10.5pt)居中；表格用三线表
+%   · 重要公式居中，编号右对齐，正文以“由式(1)可得”引用
+%   · “AI 工具使用声明”置于参考文献之前
+%   · 附录必须列出支撑材料文件清单
+% 匿名要求：全文不得出现姓名、学号、联系方式、指导教师、
+%           学校/学院/实验室/赛区名称，或可识别身份的路径与水印
+% ================================================================
 \documentclass[12pt, a4paper]{ctexart}
 
-% ---------- 页面与行距 ----------
-\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
+% ---------- 页面：四边 2.5 cm ----------
+\usepackage[left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm]{geometry}
+
+% ---------- 西文字体：Times New Roman（缺失时用度量兼容的 TeX Gyre Termes）----------
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}
+  {\setmainfont{Times New Roman}}
+  {\setmainfont{TeX Gyre Termes}}
+
+% ---------- 行距 1.25 倍、首行缩进 2 字符 ----------
 \usepackage{setspace}
-\onehalfspacing
+\setstretch{1.25}
+\setlength{\parindent}{2em}
+
+% ---------- 常用字号（对应中文字号）----------
+\newcommand{\xiaoer}{\fontsize{18pt}{22pt}\selectfont}   % 小二 18pt
+\newcommand{\sanhao}{\fontsize{16pt}{20pt}\selectfont}   % 三号 16pt
+\newcommand{\sihao}{\fontsize{14pt}{18pt}\selectfont}    % 四号 14pt
+\newcommand{\xiaosi}{\fontsize{12pt}{15pt}\selectfont}   % 小四 12pt
+\newcommand{\wuhao}{\fontsize{10.5pt}{13pt}\selectfont}  % 五号 10.5pt
 
 % ---------- 数学 ----------
-\usepackage{amsmath,amssymb,bm}
+\usepackage{amsmath, amssymb, bm}
 
-% ---------- 图表 ----------
+% ---------- 标题样式：一级黑体三号 / 二级黑体四号 / 三级黑体小四 ----------
+% 黑体本身即为粗黑效果，不再叠加 \bfseries（避免伪粗体告警）
+\ctexset{
+  section/format      = \raggedright\heiti\sanhao,
+  section/aftername   = \quad,
+  section/beforeskip  = 12pt,
+  section/afterskip   = 6pt,
+  subsection/format     = \raggedright\heiti\sihao,
+  subsection/aftername  = \quad,
+  subsection/beforeskip = 6pt,
+  subsection/afterskip  = 3pt,
+  subsubsection/format     = \raggedright\heiti\xiaosi,
+  subsubsection/aftername  = \quad,
+  subsubsection/beforeskip = 3pt,
+  subsubsection/afterskip  = 0pt,
+}
+
+% ---------- 图表题：宋体五号、居中；图题在下、表题在上 ----------
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{caption}
-\captionsetup[figure]{name=图}
-\captionsetup[table]{name=表}
-% 约定：表标题在表上方，图标题在图下方（由 \caption 的位置决定）。
+\DeclareCaptionFont{songwuhao}{\songti\wuhao}
+\captionsetup{font=songwuhao, labelfont=songwuhao, labelsep=quad, justification=centering}
+\captionsetup[figure]{name=图, skip=6pt}
+\captionsetup[table]{name=表, skip=3pt}
 
 % ---------- 算法伪代码 ----------
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \floatname{algorithm}{算法}
 
-% ---------- 代码附录 ----------
+% ---------- 附录代码：宋体五号等宽 ----------
 \usepackage{xcolor}
 \usepackage{listings}
 \lstset{
-  basicstyle=\ttfamily\small,
+  basicstyle=\ttfamily\wuhao,
   keywordstyle=\color{blue!70!black},
   commentstyle=\color{gray},
   stringstyle=\color{orange!80!black},
   numbers=left, numberstyle=\tiny\color{gray},
   breaklines=true, frame=single, tabsize=4, showstringspaces=false,
 }
-% 注意：listings 下的中文注释可能显示异常，建议附录代码注释用英文。
+% 提示：listings 的等宽字体通常缺中文字形，附录代码注释建议用英文。
 
-% ---------- 页眉页脚（匿名：不出现任何身份信息）----------
+% ---------- 页脚居中页码 ----------
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \fancyhf{}
-\fancyfoot[C]{\thepage}
+\fancyfoot[C]{\wuhao\thepage}
 \renewcommand{\headrulewidth}{0pt}
 
-% ---------- 超链接 ----------
+% ---------- 超链接（放最后加载）----------
 \usepackage[hidelinks]{hyperref}
 
-\title{\textbf{基于 XXX 的 XXX 模型}}   % 点明研究对象+核心方法，勿抄赛题原标题
-\author{}   % 匿名：留空，不得写学校/姓名/指导教师
-\date{}
-
 \begin{document}
+\pagenumbering{arabic}   % 摘要页即第 1 页
 
-% 国赛提交时的编号页由组委会系统/当年模板生成；正文（本文件）保持匿名。
-\maketitle
-\thispagestyle{fancy}
+% ==================== 摘要专用页（电子版第一页）====================
+% 规范：摘要含标题和关键词，原则上不超过一页；不需要英文摘要。
+% 标题要准确概括研究对象和任务，不写成“某年数学建模A题论文”，不含身份信息。
+\begin{center}
+  {\heiti\xiaoer 基于XXX的XXX模型}
+\end{center}
+\vspace{18pt}
 
-% ================= 摘要 =================
-\begin{center}\textbf{\zihao{4} 摘\quad 要}\end{center}
+\begin{center}
+  {\heiti\sanhao 摘\quad 要}
+\end{center}
+\vspace{6pt}
 
-% 红线：每个子问题都要有量化结果（每问必有一数）。
-% 结构：背景1句 → 总体思路1句 → 各问(方法+数值结果) → 检验/亮点 → 关键词
-本文针对……问题，建立了……模型。针对问题一，……，得到……（务必给出具体数值）。
-针对问题二，……。针对问题三，……。经灵敏度分析与误差分析验证，模型……。
+% 摘要写法：总述 + 分问 + 检验 + 总结；每问必须给出关键量化结果。
+% 不放公式、图片、表格、参考文献和大段背景。所有结果确定后最后定稿。
+针对……问题，本文对……进行研究，完成了……等任务。
 
-\vspace{1em}
-\noindent\textbf{关键词：}\quad 关键词一；关键词二；关键词三；关键词四
+对于问题一，首先……，然后……，得到……（给出具体数值结果）。
 
+对于问题二，在前述基础上进一步考虑……，通过……完成求解，结果表明……（给出具体数值结果）。
+
+最后，从……方面对结果进行检验，结果表明……。
+
+\vspace{6pt}
+\noindent{\heiti 关键词：}\quad 关键词一；关键词二；关键词三；关键词四
+
+% 规范：正文不要目录。摘要页结束后直接进入正文。
 \newpage
-\tableofcontents   % 可选，国赛不强制；用了要连编两次
-\newpage
 
-% ================= 正文 =================
+% ==================== 正文 ====================
 \section{问题重述}
+
 \subsection{问题背景}
-……（用自己的语言概括背景，不要复制题目原文）
+（用自己的语言写清背景，不大段复制题目原文。）
 
 \subsection{问题提出}
 本文需要解决以下问题：
-\begin{itemize}
-  \item 问题一：……
-  \item 问题二：……
-\end{itemize}
+
+问题一：……
+
+问题二：……
 
 \section{问题分析}
-% 红线：讲"为什么选这个模型"，而不是"我们将用 A 方法做 X"。
+% 应说明：核心难点、需处理的数据或变量、准备建立的关系、求解顺序和方法、与其他小问的联系。
 \subsection{问题一分析}
-……（数学本质是什么？为什么选这个模型？对比了哪种替代方案？）
+（这一问的数学本质是什么？为什么采用该方法而不是替代方案？与后续问题的联系？）
 
 \begin{figure}[htbp]
   \centering
@@ -102,101 +156,177 @@
   \label{fig:flow}
 \end{figure}
 
+如图~\ref{fig:flow} 所示，……。   % 规范：图必须在正文中引用并解释
+
+\subsection{问题二分析}
+……
+
 \section{模型假设}
-% 红线：每条假设都要在后文用到；禁止"数据真实可靠"这类废话假设。
+% 假设数量适中、与后文有关、不与题目冲突，并说明忽略因素的理由。
 \begin{enumerate}
   \item 假设……。理由：……。
   \item 假设……。理由：……。
 \end{enumerate}
 
 \section{符号说明}
+% 规范：使用“符号—含义—单位”三线表；同一符号全文含义一致；有单位必须注明。
 \begin{table}[htbp]
   \centering
   \caption{符号说明}
-  \begin{tabular}{clc}
+  \label{tab:notation}
+  {\songti\wuhao
+  \begin{tabular}{ccc}
     \toprule
     符号 & 含义 & 单位 \\
     \midrule
     $x_i$ & …… & —— \\
     $T$   & …… & s \\
     \bottomrule
-  \end{tabular}
-  \label{tab:notation}
+  \end{tabular}}
 \end{table}
 
-\section{问题一模型的建立与求解}
-% 六步：目标 → 选型理由 → 公式(本题适配) → 参数 → 求解 → 结果(表+图) → 分析
-\subsection{模型的建立}
-根据……，建立如下模型：
-\begin{equation}
-  \min\ f(\bm{x})=\sum_{i=1}^{n} c_i x_i, \quad \text{s.t.}\ g(\bm{x})\le 0 .
-  \label{eq:model1}
-\end{equation}
-式中各符号含义见表~\ref{tab:notation}。
+% 规范：数据处理章按题目需要保留，无数据处理内容可整章删除。
+\section{数据处理}
+（数据来源、缺失值与异常值处理、标准化等，每种处理都要说明为什么这样做。）
 
-\subsection{模型的求解}
-采用……算法求解，流程见算法~\ref{alg:1}。
-\begin{algorithm}[htbp]
-\caption{……求解算法}\label{alg:1}
-\begin{algorithmic}[1]
-\Require 输入：……
-\Ensure 输出：……
-\State 初始化……
-\While{未收敛}
-  \State 更新……
-\EndWhile
-\State \Return 最优解
-\end{algorithmic}
-\end{algorithm}
+\section{模型的建立与求解}
+% 规范：每个小问形成完整闭环——
+% 求解思路 → 变量定义 → 关系与约束 → 求解方法 → 结果 → 结果解释
+% 公式前说明建立理由，公式后解释符号和用途；不连续堆公式，不只展示软件结果。
 
-\subsection{结果与分析}
-求解得到……（给出具体数值结果）。% 红线：每个图表后必须有解释。
+\subsection{问题一的建立与求解}
 
-\subsubsection{灵敏度分析}
-对关键参数做 $\pm 10\%$、$\pm 20\%$ 扰动，结果表明……，模型稳健。
-
-\section{问题二模型的建立与求解}
-（同问题一结构：建立 → 求解 → 结果与分析 → 灵敏度/误差分析。每问末尾嵌检验。）
-
-\section{模型的评价与改进}
-% 红线：评价"本模型"，不是评价"所用算法"。
-\subsection{模型的优点}
-\begin{enumerate}
-  \item ……
-\end{enumerate}
-\subsection{模型的缺点}
-\begin{enumerate}
-  \item ……（承认本模型具体建模选择的局限，不写放之四海皆准的话）
-\end{enumerate}
-\subsection{模型的改进方向}
+\subsubsection{求解思路}
 ……
 
-% ================= 参考文献 =================
-\begin{thebibliography}{99}
-% GB/T 7714 格式；红线：≥6 条，禁止 CSDN/知乎/百度百科/AI 工具作为来源。
-% 专著[M]：作者. 书名[M]. 版次. 出版地: 出版社, 年.
-% 期刊[J]：作者. 题名[J]. 刊名, 年, 卷(期): 起-止页.
-\bibitem{ref1} 姜启源, 谢金星, 叶俊. 数学模型[M]. 5版. 北京: 高等教育出版社, 2018.
-\bibitem{ref2} 作者甲, 作者乙. 论文题目[J]. 期刊名, 2022, 40(3): 12-20.
-\bibitem{ref3} Author C, Author D. Paper title[J]. Journal Name, 2021, 15(2): 100-115.
-\end{thebibliography}
+\subsubsection{变量与参数}
+……
 
-% ================= 附录 =================
+\subsubsection{模型建立}
+根据……，可建立如下关系：
+\begin{equation}
+  \min\ f(\bm{x}) = \sum_{i=1}^{n} c_i x_i , \qquad \text{s.t.}\ \ g(\bm{x}) \le 0 .
+  \label{eq:model1}
+\end{equation}
+由式~(\ref{eq:model1}) 可知，其中 $c_i$ 表示……，$g(\bm{x})\le 0$ 表示……。
+
+\subsubsection{求解过程}
+采用……方法求解，步骤见算法~\ref{alg:1}。
+
+\begin{algorithm}[htbp]
+  \caption{……求解算法}
+  \label{alg:1}
+  \begin{algorithmic}[1]
+    \Require ……
+    \Ensure ……
+    \State 初始化……
+    \While{未满足收敛条件}
+      \State 更新……
+    \EndWhile
+    \State \Return 最优解
+  \end{algorithmic}
+\end{algorithm}
+
+\subsubsection{结果分析}
+求解得到……（明确给出题目要求的最终答案与单位）。表~\ref{tab:res1} 表明……，其原因是……。
+
+\begin{table}[htbp]
+  \centering
+  \caption{问题一求解结果}
+  \label{tab:res1}
+  {\songti\wuhao
+  \begin{tabular}{ccc}
+    \toprule
+    项目 & 数值 & 单位 \\
+    \midrule
+    …… & …… & …… \\
+    \bottomrule
+  \end{tabular}}
+\end{table}
+
+\subsection{问题二的建立与求解}
+（同上五步结构。）
+
+\section{模型检验}
+% 规范：通过已知结果对比、实际数据对比、参数变化、精度变化、交叉验证或误差分析进行检验。
+\subsection{结果验证}
+……
+
+\subsection{灵敏度分析}
+对关键参数施加 $\pm 10\%$、$\pm 20\%$ 扰动，结果表明……，说明模型……。
+
+\section{模型评价}
+% 规范：具体说明考虑了什么、忽略了什么、影响是什么、如何改进；
+% 不要只写“准确性高、适用性强”这类空泛结论。
+\subsection{优点}
+（1）……
+
+\subsection{不足}
+（1）本模型将……假设为……，未考虑……，可能导致……。
+
+\subsection{改进方向}
+（1）……
+
+% 规范：模型推广章按需保留，无内容可整章删除。
+\section{模型推广}
+……
+
+% ==================== AI 工具使用声明 ====================
+% 规范（2026）：必须置于“参考文献”之前。二选一，删除不适用的那句。
+% 使用 AI 时，支撑材料中还需包含《AI 工具使用详情.pdf》。
+% 正式比赛前请再次核对当届最新规定。
+\section*{AI 工具使用声明}
+\addcontentsline{toc}{section}{AI 工具使用声明}
+
+本参赛队在竞赛过程中未使用任何 AI 工具。
+
+% 本参赛队在竞赛过程中使用了 AI 工具，主要用于……，详细使用情况见支撑材料。
+
+% ==================== 参考文献 ====================
+% 规范：按正文首次出现顺序编号，正文标注与文末条目一一对应；
+% 所有引用的论文、书籍、网页、公开数据和他人成果都必须列出。
+\section*{参考文献}
+\addcontentsline{toc}{section}{参考文献}
+
+{\songti\wuhao
+\begin{thebibliography}{99}
+  \setlength{\itemsep}{0pt}
+  \bibitem{ref1} 作者. 文章名称[J]. 期刊名称, 年份, 卷(期): 页码.
+  \bibitem{ref2} 作者. 书名[M]. 出版地: 出版社, 年份.
+  \bibitem{ref3} 机构或作者. 网页标题[EB/OL]. 网址, 访问日期.
+\end{thebibliography}}
+
+% ==================== 附录 ====================
+% 规范：附录必须列出支撑材料文件清单；程序须完整可运行。
+% 若没有程序须写明“本论文没有用到程序”；没有支撑材料须写明“本论文没有支撑材料”。
 \newpage
-\section*{附录 A\quad 问题一求解源代码（Python）}
-\addcontentsline{toc}{section}{附录 A}
-% 2026 国赛规则：缺必要源程序或程序不能运行，可能取消评奖资格。放完整可运行代码。
+\section*{附录}
+\addcontentsline{toc}{section}{附录}
+
+\subsection*{附录 A\quad 支撑材料文件清单}
+
+{\songti\wuhao
+\begin{tabular}{cll}
+  \toprule
+  序号 & 文件名 & 说明 \\
+  \midrule
+  1 & solve\_q1.py & 问题一求解程序 \\
+  2 & result1.xlsx & 问题一结果文件 \\
+  3 & figures/ & 论文所用高清图片 \\
+  \bottomrule
+\end{tabular}}
+
+\subsection*{附录 B\quad 问题一求解源代码（Python）}
+
 \begin{lstlisting}[language=Python]
 import numpy as np
 
 # Solution code for Problem 1.
-# Keep code comments in English to avoid CJK glyph issues in listings;
-# match variable names to the symbols used in the paper body.
+# Keep comments in English: the monospace font usually lacks CJK glyphs.
+# Variable names should match the symbols used in the paper body.
 def solve():
     pass
 \end{lstlisting}
 
 \end{document}
-
-
 

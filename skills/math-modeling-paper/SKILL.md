@@ -43,11 +43,28 @@ description: 数学建模竞赛论文写作全流程指导。覆盖国赛(CUMCM)
 - 需要句式参考 → 读取 `references/common-phrases.md`
 - 确定题型策略 → 读取 `references/problem-type-strategies.md`
 - 图表/代码规范 → 读取 `references/figure-and-code-guide.md`
+- 需要生成论文图表或插图 → 读取 `references/figure-generation.md`，并运行 `scripts/figure_pipeline.py`
 - 美赛 Memo/Letter → 读取 `references/memo-writing.md`
 
 ### Step 3: 逐节指导或检查
 
 按照论文结构顺序，对每个章节执行「目的 → 结构 → 写什么 → 红线」四步指导。具体规则见下文各节。
+
+### Step 3.5: 图表生成与论文插图（需要图时必做）
+
+图表不是装饰，必须服务于可验证的结论。对每一张图先建立 Figure Contract（`id`、一句话 `claim`、`evidence` 数据来源、图类型、论文小节、图题），再生成和插入论文。
+
+对于包含时空变化、优化迭代、方案比较、误差/灵敏度或空间几何关系的国赛题，默认执行本阶段，不需要用户再次提出“请画图”；只有在图不能增加任何独立证据时才可跳过，并在交付说明中写明原因。
+
+1. 定量图（轨迹、时间轴、误差、收敛、灵敏度、比较图）必须由真实数据通过 Python/Matplotlib、MATLAB 或 R 生成；严禁使用图像生成模型伪造数值、曲线、坐标轴或实验结果。
+2. 概念流程图、几何示意图优先使用 SVG/PDF；有 `baoyu-diagram` 等 diagram skill 时调用它，没有时使用 Graphviz、TikZ、Mermaid 或 Matplotlib patches。
+3. 只有封面、背景或非定量概念插画才可调用 `imagegen`/`baoyu-image-gen`，并明确标注为示意图，保存提示词和来源；不得把 AI 插画当作数据证据。
+4. 使用仓库脚本 `scripts/figure_pipeline.py` 读取 `figure_manifest.json`，将图输出到论文项目的 `figures/`，默认同时生成 SVG、PDF、600 dpi PNG。中间数据放在 `figure_data/`，生成脚本放在 `scripts/`。
+5. 每个生成的图必须在正文出现 `图~\\ref{...}` 引用，并在图后解释结论、原因和实际含义；没有独立证据的 panel 删除，不为填版面加图。
+6. LaTeX 中只能引用实际存在的文件，统一使用 `\\includegraphics`；图题在图下方，坐标轴包含变量名和单位，黑白打印时仍能通过线型或标记区分。
+
+详细 manifest 格式、图类型路由、输出格式和检查清单见 `references/figure-generation.md`。
+完整的执行顺序和失败处理见仓库 `workflows/figure-pipeline.md`。
 
 ### Step 4: 交付前自审（必做）
 
@@ -65,6 +82,8 @@ description: 数学建模竞赛论文写作全流程指导。覆盖国赛(CUMCM)
 6. 如为 ❌，修复后重新自审
 
 每轮通过后才进入下一轮。如果时间紧迫，至少完成第一轮（论证逻辑）——这是区分三等奖和一等奖的关键差距。
+
+在进入 LaTeX 阶段前，额外确认：`figure_manifest.json` 中的每张图都有结论、证据链和图题；`figures/` 中存在实际的 SVG/PDF/PNG 文件；正文中的每个 `\\includegraphics` 路径都能解析；图中数字与代码、Excel 和正文一致；定量图不是由 AI 图像生成模型伪造的。
 
 ### Step 5: 依次输出 .tex 代码（Overleaf 复制粘贴，国赛默认交付方式）
 
@@ -91,6 +110,8 @@ description: 数学建模竞赛论文写作全流程指导。覆盖国赛(CUMCM)
 6. **占位符必须清理**：交付前提醒用户全文搜索并删除 `……`、`XXX`、`此处插图` 等占位内容——规范明令不得出现。
 
 **红线**：格式参数（页边距、字号、行距、页码位置、图表题位置）由模板导言区统一控制，**不要在正文块里临时改格式**；正文块只负责内容。
+
+当用户要求“直接生成论文文件”而不是只要代码块时，完成分块写作后必须将模板与全部正文、公式、表格和实际插图引用组装为项目目录中的 `main.tex`；不得只把 LaTeX 显示在聊天里。若环境可运行 XeLaTeX，则编译两次并修复缺失图片、字体、引用和占位符错误；否则输出可复制的 `main.tex` 与明确的编译命令。
 
 ---
 
@@ -364,6 +385,7 @@ description: 数学建模竞赛论文写作全流程指导。覆盖国赛(CUMCM)
 - `references/common-phrases.md` — 常用学术句式（中英双语）
 - `references/problem-type-strategies.md` — A/B/C 题差异化策略
 - `references/figure-and-code-guide.md` — 图表规范与代码附录要求
+- `references/figure-generation.md` — Figure Contract、图表类型路由、数据驱动绘图、LaTeX 插图映射和生成后检查
 - `references/memo-writing.md` — 美赛 Memo/Letter 写作指导
 - `references/de-ai-writing.md` — 去 AI 味写作指南（八类 AI 痕迹识别 + 注入真实感 + 数模专用规范）
 - `references/self-review-framework.md` — 四轮自审框架（论证逻辑→章节结构→表述质量→格式规范）

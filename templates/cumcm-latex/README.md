@@ -34,7 +34,7 @@
 - **题目**：准确概括研究对象与任务，别写成「2025 年数学建模 A 题论文」。
 - **摘要**：按「总述 + 分问 + 检验 + 总结」写，**每问必须给出关键量化结果**；不放公式图表；最后定稿。
 - **各章**：按注释里的规范提示写；`数据处理`、`模型推广` 两章按需，**没内容就整章删掉**。
-- **图片**：放进 Overleaf 项目的 `figures/` 目录，取消 `\includegraphics` 那行的注释。
+- **图片**：先按 `skills/math-modeling-paper/references/figure-generation.md` 建立 Figure Contract 和 `figure_manifest.json`，运行 `scripts/figure_pipeline.py` 生成 SVG/PDF/PNG，再把整个 `figures/` 目录上传到 Overleaf；正文中的每个图都必须用实际存在的文件名引用，不能保留缺失资源的 `\includegraphics` 占位行。
 - **参考文献**：按正文首次出现顺序编号，正文标注与条目一一对应。
 - **附录**：列出支撑材料清单 + 完整可运行代码。没程序须写明「本论文没有用到程序」。
 

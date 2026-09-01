@@ -1,6 +1,6 @@
 ---
 name: math-modeling-solver
-description: 数学建模竞赛解题全流程指导。覆盖国赛(CUMCM)和美赛(MCM/ICM)全部题型(A-F)，提供12种问题本质分析、95+场景模型决策矩阵、5本算法Cookbook、11本完整例题Playbook、22个Python+7个MATLAB可运行代码模板。与math-modeling-paper形成"解题→写作"配对。当用户提及建模思路、选什么模型、怎么建模、赛题求解、粘贴赛题文本、美赛/国赛题目分析、CVaR/NSGA-II/Monte Carlo/时间序列/ANOVA/灰色关联、网络流/图论/生态建模、模型命名/Memo/Letter/Our Work流程图时，使用此skill。
+description: 数学建模竞赛解题与可编辑项目落盘指导。覆盖国赛(CUMCM)和美赛(MCM/ICM)全部题型(A-F)，提供问题本质分析、模型决策矩阵、算法 cookbook、例题 playbook 和 Python/MATLAB 代码模板；可将拆题记录、论文草稿、各问源码和绘图脚本保存到统一项目目录。与math-modeling-paper形成"解题→写作"配对。当用户提及建模思路、选什么模型、怎么建模、赛题求解、粘贴赛题文本、美赛/国赛题目分析、项目文件、保存中间结果、代码文件、绘图脚本、CVaR/NSGA-II/Monte Carlo/时间序列/ANOVA/灰色关联、网络流/图论/生态建模、模型命名/Memo/Letter/Our Work流程图时，使用此skill。
 ---
 
 # 数学建模竞赛解题指导
@@ -217,6 +217,7 @@ description: 数学建模竞赛解题全流程指导。覆盖国赛(CUMCM)和美
 4. 生成算法伪代码（Input / Output / Steps 格式）
 5. 加载对应代码模板，**将模板中的变量名、函数名、注释全部替换**为本题的具体内容。模板仅提供算法逻辑骨架——最终代码的每一行都应围绕本题改写：变量名用题目中的符号、函数名描述本题的操作、注释解释为什么这样算。两个队伍用同一个模板解同一道题，产出的代码在命名和注释上应当完全不同
 6. 如用户没有指定语言，默认 Python；物理/工程类默认 MATLAB
+7. 如果用户处于项目文件模式，将每个子问题的完整源码写入 `solution/code/`，将算法说明和运行结果摘要写入 `solution/notes/04_algorithm_results.md`；不要只在聊天中展示代码。
 
 **输出格式**：
 
@@ -251,6 +252,22 @@ Steps:
 ```
 
 **完成后**：停留，等待用户确认。确认后进入阶段4。
+
+---
+
+## 项目文件模式（与 paper skill 共用目录）
+
+当用户提交完整赛题并要求完成解题/论文，或明确要求“把每一步保存成文件”“生成可编辑论文项目”或提供了项目目录时，默认进入项目文件模式（宿主具备文件写入能力时），读取 `../math-modeling-paper/references/project-layout.md`，并在同一个 `solution/` 目录中持续落盘。用户只要求解释某个概念、比较模型或只看代码片段时，才使用聊天模式。项目模式不改变阶段确认规则：文件写入完成后仍要停下等待用户确认。
+
+按阶段保存：
+
+- 阶段1：`solution/notes/01_problem_decomposition.md`，以及可直接作为草稿的 `solution/tex/sections/02_problem_restatement.tex` 和 `03_problem_analysis.tex`；
+- 阶段1.5：`solution/notes/02_literature_review.md`；
+- 阶段2：`solution/notes/03_model_selection.md`；
+- 阶段3：`solution/notes/04_algorithm_results.md`、`solution/code/problem1.py` 等完整源码；
+- 阶段4：更新各 `tex/sections/*.tex` 和 `paper_content.json`，并输出 `[PAPER_READY]`。
+
+绘图脚本属于论文图表阶段：保存到 `solution/scripts/figures/`，数据保存到 `solution/figure_data/`，不要用截图或聊天中的临时代码替代源文件。用户已经修改过的文件必须保留，除非用户明确要求覆盖。
 
 ---
 
@@ -303,6 +320,7 @@ Steps:
 3. **用户可回退**：如阶段3发现模型不合适，可退回阶段2重新匹配；如怀疑模型选择方向，可退回阶段1.5补充文献检索
 4. **Playbook 参考**：在阶段1末尾检查是否匹配已知题型模板。如匹配，加载对应 playbook **作为思路参考**——playbook 展示的是一种可行路径，不是唯一路径。你遇到的题目和 playbook 的例题一定不同：数据不同、约束不同、要求不同。playbook 的价值在于让你看到「这类题一般怎么想」，而不是「这道题应该照搬什么」。永远从你的题目出发，而不是从 playbook 出发
 5. **语言偏好**：首次交互时确认用户偏好 Python 还是 MATLAB。物理/工程类（A题）默认 MATLAB，数据/ML 类（C题）默认 Python，优化类（B题）两者均可
+6. **文件与进度分离**：写入 `solution/` 只代表保存了当前阶段，不代表用户已经确认；必须在对话中报告新增/修改的文件并等待确认。
 
 ---
 
@@ -323,3 +341,4 @@ Steps:
 - `references/playbooks/` — 12 本完整例题端到端走通（国赛：物理机理/调度优化/策略博弈/ML分类/ML回归/评价决策/路径规划/数据洞察/几何运动学；美赛：网络科学/环境科学/政策分析）
 - `references/code-templates/` — Python & MATLAB 可运行代码模板（22 个 Python + 7 个 MATLAB）
 - **跨 skill**：`../math-modeling-paper/references/literature-review.md` — 文献检索策略、综述写作、引用格式、参数溯源（阶段1.5自动加载）
+- **跨 skill**：`../math-modeling-paper/references/project-layout.md` — 论文、代码、绘图脚本和数据的统一项目目录契约

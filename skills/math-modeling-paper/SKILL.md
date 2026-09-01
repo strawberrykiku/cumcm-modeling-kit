@@ -1,6 +1,6 @@
 ---
 name: math-modeling-paper
-description: 数学建模竞赛论文写作全流程指导。覆盖国赛(CUMCM)和美赛(MCM/ICM)，从论文结构规划、各章节撰写、模型检验、参考文献规范到最终格式检查。与math-modeling-solver形成"解题→写作"配对——可接收solver输出的论文草稿片段直接展开写作。当用户提及数学建模论文写作、建模比赛、国赛/美赛/电工杯/亚太杯/深圳杯/华为杯论文、CUMCM、MCM/ICM、数模论文结构、摘要写作、模型检验、灵敏度分析、latex建模模板、word建模排版、Memo/Letter写作、模型命名、Our Work流程图，或需要写/修改/优化/检查建模论文的任何部分时，都必须使用此 skill。
+description: 数学建模竞赛论文写作与可编辑项目生成指导。覆盖国赛(CUMCM)和美赛(MCM/ICM)，从论文结构规划、各章节撰写、模型检验、参考文献规范到最终格式检查；可将分章节 LaTeX、各问代码、绘图脚本和数据保存到统一项目目录。与math-modeling-solver形成"解题→写作"配对——可接收solver输出的论文草稿片段直接展开写作。当用户提及数学建模论文写作、建模比赛、国赛/美赛/电工杯/亚太杯/深圳杯/华为杯论文、CUMCM、MCM/ICM、数模论文结构、摘要写作、模型检验、灵敏度分析、latex建模模板、word建模排版、项目文件、分章节tex、代码文件、绘图脚本、Memo/Letter写作、模型命名、Our Work流程图，或需要写/修改/优化/检查建模论文的任何部分时，都必须使用此 skill。
 ---
 
 # 数学建模竞赛论文写作
@@ -44,11 +44,24 @@ description: 数学建模竞赛论文写作全流程指导。覆盖国赛(CUMCM)
 - 确定题型策略 → 读取 `references/problem-type-strategies.md`
 - 图表/代码规范 → 读取 `references/figure-and-code-guide.md`
 - 需要生成论文图表或插图 → 读取 `references/figure-generation.md`，并运行 `scripts/figure_pipeline.py`
+- 需要把论文、代码和绘图脚本落成可编辑项目 → 读取 `references/project-layout.md`
 - 美赛 Memo/Letter → 读取 `references/memo-writing.md`
 
 ### Step 3: 逐节指导或检查
 
 按照论文结构顺序，对每个章节执行「目的 → 结构 → 写什么 → 红线」四步指导。具体规则见下文各节。
+
+#### 项目文件模式（论文/代码/图表统一落盘）
+
+当用户要求完成一篇完整论文、保存/生成项目文件，或已经提供项目目录时，默认进入项目文件模式（宿主具备文件写入能力时）。先读取 `references/project-layout.md`，创建/使用统一的 `solution/` 目录，并遵守以下规则：
+
+1. 每完成一个论文部分，先将原始 LaTeX 写入 `solution/tex/sections/` 对应的 `.tex` 文件，再在对话中给出文件路径、摘要和等待确认。
+2. 每完成一个子问题的程序，将完整源码写入 `solution/code/`（例如 `problem1.py`、`problem2.py` 或对应 `.m` 文件）。不要只把代码留在 Markdown 代码块中。
+3. 每生成一张定量图，保存题目专用绘图脚本到 `solution/scripts/figures/`，把可追溯的 JSON/CSV 输入保存到 `solution/figure_data/`，再调用 `figure_pipeline.py` 生成 `solution/figures/` 下的图。
+4. 同步维护 `paper_content.json` 和 `figure_manifest.json`，使项目可以在之后重新构建。用户修改过的分文件必须保留；除非用户明确要求覆盖，不要用旧 JSON 覆盖它们。
+5. 项目文件模式仍然按阶段停留；“写入文件”不等于自动进入下一阶段。每次暂停时明确列出本次新增/修改的文件。
+
+用户明确要求“只看思路/只输出代码块”时，才使用聊天模式，不创建项目文件。
 
 ### Step 3.5: 图表生成与论文插图（需要图时必做）
 
@@ -85,37 +98,41 @@ description: 数学建模竞赛论文写作全流程指导。覆盖国赛(CUMCM)
 
 在进入 LaTeX 阶段前，额外确认：`figure_manifest.json` 中的每张图都有结论、证据链和图题；`figures/` 中存在实际的 SVG/PDF/PNG 文件；正文中的每个 `\\includegraphics` 路径都能解析；图中数字与代码、Excel 和正文一致；定量图不是由 AI 图像生成模型伪造的。
 
-### Step 5: 依次输出 .tex 代码（Overleaf 复制粘贴，国赛默认交付方式）
+### Step 5: 输出并保存分章节 `.tex` 文件
 
-**这是国赛的默认输出方式**：不生成 PDF、不要求用户装 LaTeX，而是**按章节顺序依次输出 `.tex` 代码块**，用户逐块复制粘贴到 Overleaf 即可编译。
+**项目文件模式是完整论文交付的默认方式**：按章节顺序生成独立 `.tex` 文件，同时在对话中提供路径和必要的预览。`main.tex` 只负责通过 `\input{tex/sections/...}` 拼接这些文件，用户可以事后单独修改任意章节。
+
+没有项目目录、且用户明确只要聊天内容时，才退回“代码块模式”。代码块模式仍可按章节输出，但不应声称已经生成了本地文件。
 
 **执行规则**：
 
 1. **先读格式规范**：`references/cumcm-format-spec.md`（官方硬性要求）。模板骨架见仓库 `templates/cumcm-latex/main.tex`——其导言区已固化全部格式要求，**不要重新发明格式**。
-2. **分块输出，一块一停**。按下面顺序，每次只输出**一块**，让用户粘贴后确认再给下一块：
+2. **分文件输出，一文件一停**。项目文件模式按下面顺序写入文件；每次只处理一个文件（可将摘要和关键词放在同一文件），写完后报告路径并等待用户确认：
 
    | 序号 | 输出块 | 内容 |
    |---|---|---|
-   | ① | 导言区 | 从 `\documentclass` 到 `\begin{document}` 前（直接用模板导言区，勿改格式参数） |
-   | ② | 摘要页 | 题目 + 摘要 + 关键词 + `\newpage` |
-   | ③ | 第 1–2 章 | 问题重述、问题分析 |
-   | ④ | 第 3–4 章 | 模型假设、符号说明（三线表） |
-   | ⑤ | 第 5–6 章 | 数据处理（按需）、模型的建立与求解（每问五小节闭环） |
-   | ⑥ | 第 7–8 章 | 模型检验、模型评价 |
-   | ⑦ | 收尾 | AI 工具使用声明 → 参考文献 → 附录（含支撑材料清单）→ `\end{document}` |
+   | ① | `tex/preamble.tex` | 从 `\documentclass` 到 `\begin{document}` 前（直接用模板导言区，勿改格式参数） |
+   | ② | `tex/sections/01_abstract.tex` | 题目 + 摘要 + 关键词 + `\newpage` |
+   | ③ | `tex/sections/02_problem_restatement.tex` | 问题重述 |
+   | ④ | `tex/sections/03_problem_analysis.tex` | 问题分析和整体建模流程 |
+   | ⑤ | `tex/sections/04_model_assumptions.tex`、`05_notation.tex` | 模型假设、符号说明 |
+   | ⑥ | `tex/sections/06_data_processing.tex`、`07_modeling_solution.tex` | 数据处理（按需）、模型的建立与求解 |
+   | ⑦ | `tex/sections/08_model_validation.tex`、`09_model_evaluation.tex` | 模型检验、模型评价 |
+   | ⑧ | `tex/sections/10_model_extension.tex`（按需） | 模型推广 |
+   | ⑨ | `tex/sections/11_ai_statement.tex`、`12_references.tex`、`13_appendix.tex` | 收尾内容；附录引用 `code/` 下的完整程序 |
 
-3. **每块都是完整可粘贴的 LaTeX**：用 ```latex 代码块包裹，不夹杂解释性文字在代码内部（注释可以）。
-4. **每块输出后附一句**：这一块该粘到哪里、需要用户替换什么（如图片文件名、具体数值）。
-5. **告知编译方式**（第一次输出导言区时说明）：Overleaf 新建项目 → 粘贴进 `main.tex` → Menu → Compiler 选 **XeLaTeX** → 连编两次。
+3. **每个文件都是完整原始 LaTeX**：不包裹 Markdown 代码围栏，不把解释性文字写进正文文件（必要的 LaTeX 注释可以保留）。
+4. **每个文件写入后报告**：说明文件路径、它在 `main.tex` 中的顺序，以及用户可能需要替换的数值或图片文件名。
+5. **告知编译方式**（第一次生成项目时说明）：在项目根目录运行构建脚本，或将整个 `solution/` 上传到 Overleaf，Compiler 选 **XeLaTeX**，连编两次。
 6. **占位符必须清理**：交付前提醒用户全文搜索并删除 `……`、`XXX`、`此处插图` 等占位内容——规范明令不得出现。
 
 **红线**：格式参数（页边距、字号、行距、页码位置、图表题位置）由模板导言区统一控制，**不要在正文块里临时改格式**；正文块只负责内容。
 
-当用户要求“直接生成论文文件”而不是只要代码块时，完成分块写作后必须将模板与全部正文、公式、表格和实际插图引用组装为项目目录中的 `main.tex`；不得只把 LaTeX 显示在聊天里。若环境可运行 XeLaTeX，则编译两次并修复缺失图片、字体、引用和占位符错误；否则输出可复制的 `main.tex` 与明确的编译命令。
+当用户要求“直接生成论文文件”时，不能只把 LaTeX 显示在聊天里：必须先将各部分写入 `solution/tex/sections/*.tex`、代码写入 `solution/code/`、绘图脚本写入 `solution/scripts/figures/`，再生成薄入口 `solution/main.tex`。若环境可运行 XeLaTeX，则编译两次并修复缺失图片、字体、引用和占位符错误；否则保留完整源文件并给出 Overleaf 编译命令。
 
 ### Step 6: 一键构建论文项目（用户要求自动交付时）
 
-当用户要求“完整生成论文文件”“一键完成”或“不要只输出代码块”时，使用 `scripts/build_cumcm_project.py`，而不是手工复制模板。输入是 `paper_content.json`（摘要、正文 LaTeX、AI 声明、参考文献和附录）以及可选的 `figure_manifest.json`；输出到项目目录的 `main.tex`、`figures/`、`build_report.json` 和编译日志。
+当用户要求“完整生成论文文件”“一键完成”或“不要只输出代码块”时，使用 `scripts/build_cumcm_project.py`，而不是手工复制模板。输入是包含 `sections`、`code_files`、`figure_scripts`（以及可选 `figure_data_files`、`notes_files`）的 `paper_content.json` 和可选的 `figure_manifest.json`；输出到项目目录的分章节 `.tex`、`code/`、`scripts/figures/`、`figure_data/`、`notes/`、`figures/`、`main.tex`、`build_report.json` 和编译日志。
 
 ```bash
 python skills/math-modeling-paper/scripts/build_cumcm_project.py \\
@@ -127,9 +144,11 @@ python skills/math-modeling-paper/scripts/build_cumcm_project.py \\
   --compile
 ```
 
+构建器默认保护已经存在的可编辑文件；只有明确需要用 JSON 重新覆盖时才增加 `--overwrite`。
+
 构建器会先生成图表，再组装模板，拒绝占位符和缺失图片引用；发现 XeLaTeX 时自动编译两遍，否则明确提示使用 Overleaf XeLaTeX。输入契约与失败处理见 `references/project-contract.md`。
 
-paper 阶段在用户要求完整文件交付时，应同时把已完成内容落成 `paper_content.json`，而不是只在聊天里分块展示。`body_tex` 中直接放完整正文和实际图表引用；构建器会负责套用模板的导言区、补齐 AI 声明/参考文献/附录区并生成最终 `main.tex`。
+ paper 阶段在用户要求完整文件交付时，应同时把已完成内容落成 `paper_content.json`，而不是只在聊天里分块展示。新项目优先使用 `sections` 保存每个章节，并用 `code_files`、`figure_scripts`、`figure_data_files` 保存程序、绘图脚本和数据；旧版 `body_tex` 仍可兼容，但会被写成一个 legacy body 文件。构建器会生成薄入口 `main.tex`，由它通过 `\input` 拼接分文件。
 
 ---
 
@@ -348,6 +367,7 @@ paper 阶段在用户要求完整文件交付时，应同时把已完成内容�
 - 代码中的方法名/变量名应与论文中的符号一致
 - MATLAB/Python/C++ 均可，选择取决于题目类型（见 `references/problem-type-strategies.md`）
 - 代码不需在正文中逐行解释，但论文声称的方法必须在代码中实现
+- 项目文件模式下，每个子问题必须有 `code/` 下的独立完整源码文件；附录优先使用 `\lstinputlisting{code/problem1.py}` 等路径引用，不要在 `.tex` 中再复制一份可能失去同步的代码。
 
 详细图表和代码规范见 `references/figure-and-code-guide.md`。
 

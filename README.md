@@ -66,7 +66,7 @@ npx skills add strawberrykiku/cumcm-modeling-kit --skill '*'
 
 ### 是不是丢给它题目就行？
 
-大致是——默认仍按阶段陪跑；当 solver/paper 已产出内容契约时，也支持一键生成图表、`main.tex` 和编译报告。
+大致是——默认仍按阶段陪跑；如果要求保存项目文件，solver/paper 会把每个阶段和每个产物写入同一个可编辑目录；内容契约完成后，再用脚本生成 `main.tex` 和编译报告。
 
 1. 直接**粘贴赛题文本**，`math-modeling-solver` 通常会自动触发；没触发就明说："用 math-modeling-solver 解这道题"。
 2. 它先确认：**国赛还是美赛、偏好 Python 还是 MATLAB**。
@@ -76,7 +76,9 @@ npx skills add strawberrykiku/cumcm-modeling-kit --skill '*'
 拆题 → (查文献，可跳过) → 选模型（给你多个候选让你拍板）→ 出代码 → 论文草稿片段 [PAPER_READY]
 ```
 
-4. 说"开始写论文" → 接力到 `math-modeling-paper`，逐章写（摘要 / 问题分析 / 建模求解 / 检验 / 评价……），并做四轮自审 + 去 AI 味。
+如果希望每一步都落盘，直接补充：“开启项目文件模式，所有论文、代码、绘图脚本和中间记录保存到 `./solution`”。之后每完成一个文件，助手会报告路径并等待确认；如果只想看聊天内容，可明确说“只输出代码块，不写文件”。
+
+4. 说"开始写论文" → 接力到 `math-modeling-paper`，逐章写（摘要 / 问题分析 / 建模求解 / 检验 / 评价……），并在项目模式下同步保存每个 `.tex` 文件，做四轮自审 + 去 AI 味。
 5. 说"过一遍交卷清单" → 接力到 `cumcm-award-gate`，跑 A–H 强制自查 + 图表/PDF 检查 + 对照国一标准的盲评自评打分。
 
 完整流程和 72 小时时间盒见 `workflows/cumcm-pipeline.md`。贯穿始终的三个"够国一"要求：**每问必有一数、创新账本、每问都有检验**。
@@ -85,16 +87,17 @@ npx skills add strawberrykiku/cumcm-modeling-kit --skill '*'
 
 - 结构化拆题、（可选）文献摘要、带理由和候选的模型推荐
 - 公式推导 + 伪代码 + **可运行的 Python/MATLAB 代码**（Claude Code 装了解释器就能真跑出数值和图）
-- 论文各章草稿正文 + 附录代码
+- 论文各章草稿正文（项目模式下为独立 `.tex` 文件）+ 各问完整源码 + 绘图脚本和数据
 - 一份过完的交卷自查清单 + 图表缺陷/PDF 匿名性检查 + 一个国一标准下的自评分数
 
 ### 它不会替你做的
 
-- **不会凭空替你发明模型结论或数据**——但在提供 `paper_content.json` 和 `figure_manifest.json` 后，可以用 `build_cumcm_project.py` 自动生成图表、组装匿名版 `main.tex`，并在本机有 XeLaTeX 时连编两次。
+- **不会凭空替你发明模型结论或数据**——项目模式会保存 AI 已经生成并核验的内容；在提供 `paper_content.json` 和 `figure_manifest.json` 后，可以用 `build_cumcm_project.py` 生成分章节文件、代码/绘图脚本目录、图表、组装匿名版 `main.tex`，并在本机有 XeLaTeX 时连编两次。
+- **替不了你理解和核验**——评审会查代码与论文一致性，也会看 AI 痕迹；比赛是你自己的作品，你需要看懂并对提交内容负责。
 
 ### 一键生成论文项目
 
-paper 阶段完成后，将摘要、正文 LaTeX、AI 声明、参考文献和附录写入 `paper_content.json`；将真实数据图的 Figure Contract 写入 `figure_manifest.json`。然后运行：
+paper 阶段完成后，将摘要、各章节 LaTeX、AI 声明、参考文献、附录以及 `code_files`、`figure_scripts`、`figure_data_files` 写入 `paper_content.json`；将真实数据图的 Figure Contract 写入 `figure_manifest.json`。然后运行：
 
 ```bash
 python skills/math-modeling-paper/scripts/build_cumcm_project.py \\
@@ -106,8 +109,23 @@ python skills/math-modeling-paper/scripts/build_cumcm_project.py \\
   --compile
 ```
 
-构建器会拒绝占位符和缺失插图，生成 `solution/main.tex`、`solution/figures/`、`solution/build_report.json`，并在没有 XeLaTeX 时提示使用 Overleaf。输入契约见 `skills/math-modeling-paper/references/project-contract.md`，图表规范见 `skills/math-modeling-paper/references/figure-generation.md`。
-- 替不了你理解：评审会查代码与论文一致性、也看 AI 痕迹，比赛是你自己的作品。它加速你、兜住漏洞，但你得看懂并对交出去的东西负责。
+构建器会生成并保留以下可编辑产物：
+
+```text
+solution/
+├── main.tex                         # 通过 \\input 拼接分文件
+├── tex/preamble.tex
+├── tex/sections/*.tex               # 每个论文部分一个文件
+├── code/                            # 每个子问题的完整程序
+├── scripts/figures/                 # 题目专用绘图脚本
+├── figure_data/                     # 图表输入数据
+├── figures/                         # SVG/PDF/PNG 图表
+├── notes/                           # solver 与质检记录
+├── qa/                              # 可选的质检日志
+└── build_report.json
+```
+
+已存在的分文件默认不会覆盖；需要从 JSON 强制重生成时增加 `--overwrite`。构建器会拒绝占位符和缺失插图，并在没有 XeLaTeX 时提示使用 Overleaf。完整目录契约见 `skills/math-modeling-paper/references/project-layout.md` 和 `skills/math-modeling-paper/references/project-contract.md`。
 
 ## 致谢与许可
 

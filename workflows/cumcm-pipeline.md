@@ -1,6 +1,6 @@
 # 国赛数学建模 · 三段式流程（轻壳版）
 
-> 一个对话从拿到题目走到交卷。三个 skill 接力：solver → paper → award-gate。
+> 一个对话从拿到题目走到交卷。三个 skill 接力：solver → paper → award-gate；项目文件模式会把每个阶段的源文件保存在同一个 `solution/` 目录。
 > 每段末尾**停下等你确认**，不要一口气跑到底——你要能讲清楚你提交的每一步。
 
 ## 总览
@@ -18,7 +18,8 @@
   │
   ▼
 ② math-modeling-paper（写作）
-  ├ 逐章写作（摘要 / 问题分析 / 建模求解 / 检验 / 评价……）
+  ├ 逐章写作（摘要 / 问题分析 / 建模求解 / 检验 / 评价……），同步写入 `tex/sections/*.tex`
+  ├ 保存各问程序到 `code/`，保存绘图程序到 `scripts/figures/`
   └ 交付前四轮自审 + 去 AI 味
   │
   ▼
@@ -45,6 +46,18 @@
 - paper：逐章写，每章先讲"目的 → 结构 → 写什么 → 红线"。
 - award-gate：发现 ❌ 就停下改，改完再继续。
 
+## 项目文件模式的落盘节奏
+
+当用户要求“保存每一步”或提供项目目录时，按 `skills/math-modeling-paper/references/project-layout.md` 创建一个统一的 `solution/` 目录：
+
+```text
+solver 阶段  → notes/*.md + 初步 tex/sections/*.tex + code/*
+paper 阶段   → 完整 tex/sections/*.tex + scripts/figures/* + figure_data/*
+构建阶段     → main.tex + figures/* + build_report.json
+```
+
+每个文件写入后都要向用户报告路径并等待确认；“落盘”不代表自动进入下一阶段。用户可以直接编辑分文件，构建器默认保护已有修改。
+
 ## 72 小时时间盒建议（新手参考，非硬性）
 
 | 时段 | 干什么 |
@@ -68,7 +81,7 @@
 
 ## 一键项目构建
 
-当 solver 和 paper 已经产出 `paper_content.json` 与 `figure_manifest.json`，可直接运行：
+当 solver 和 paper 已经产出分文件及 `paper_content.json`、`figure_manifest.json`，可直接运行：
 
 ```bash
 python skills/math-modeling-paper/scripts/build_cumcm_project.py \\
@@ -81,9 +94,11 @@ python skills/math-modeling-paper/scripts/build_cumcm_project.py \\
 
 构建器负责生成图表、组装 `main.tex`、检查占位符和插图路径，并在有 XeLaTeX 时编译两遍；详细输入契约见 `skills/math-modeling-paper/references/project-contract.md`。
 
+默认不会覆盖已经存在的 section、代码、绘图脚本和数据；需要从 JSON 强制重生成时增加 `--overwrite`。
+
 ## 排版成 PDF
 
-论文正文写完后，先执行 `workflows/figure-pipeline.md`：从真实模型输出生成 `figures/` 下的 SVG/PDF/PNG，并将所有图复制到最终论文项目。然后用仓库自带的 `templates/cumcm-latex/main.tex`（匿名版国赛模板）排版：把各章内容和实际 `\\includegraphics` 引用填进去，用 **XeLaTeX 连编两次**。编译说明与依赖见 `templates/cumcm-latex/README.md`。交卷前用 `cumcm-award-gate` 的 `pdf_qa.sh --anonymous` 扫一遍匿名性。
+论文正文写完后，先执行 `workflows/figure-pipeline.md`：从真实模型输出生成 `figures/` 下的 SVG/PDF/PNG，并将绘图脚本和数据保留在项目目录。随后构建器生成薄入口 `main.tex`，它通过 `\\input{tex/sections/...}` 拼接各章节；用 **XeLaTeX 连编两次**。编译说明与依赖见 `templates/cumcm-latex/README.md`。交卷前用 `cumcm-award-gate` 的 `pdf_qa.sh --anonymous` 扫一遍匿名性。
 
 ## 安装与加载
 

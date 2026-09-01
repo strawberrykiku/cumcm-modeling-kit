@@ -10,6 +10,7 @@
 - **29 个可运行代码模板**：22 Python + 7 MATLAB，含问题适配注释
 - **12 本 Playbook**：完整例题端到端走通，拆题到代码全流程
 - **论文桥接**：输出可直接嵌入 `math-modeling-paper` 的论文草稿片段
+- **可编辑项目模式**：按阶段保存拆题/文献/选模记录、论文 `.tex`、各问源码和绘图脚本到同一个 `solution/` 目录
 
 ## 安装
 
@@ -35,6 +36,23 @@ C 题数据预测，XGBoost 和随机森林怎么选？
 - `math-modeling-paper`：解题完成后切换到论文写作
 - `nature-figure`：科研级图表
 - `xlsx`：数据清洗与分析
+
+## 可编辑项目模式
+
+当用户要求保存中间结果或生成完整项目时，solver 与 paper 共用一个 `solution/` 目录。solver 写入：
+
+```text
+solution/
+├── notes/01_problem_decomposition.md
+├── notes/02_literature_review.md
+├── notes/03_model_selection.md
+├── notes/04_algorithm_results.md
+├── tex/sections/02_problem_restatement.tex
+├── tex/sections/03_problem_analysis.tex
+└── code/problem1.py   # 或 .m
+```
+
+论文阶段再写入其余 `tex/sections/*.tex`、`scripts/figures/*.py` 和 `figure_data/`。每个文件写入后仍会在对话中报告路径并等待确认；写文件不会自动跳过阶段。完整目录契约见上层仓库的 `skills/math-modeling-paper/references/project-layout.md`。
 
 ## 文件结构
 

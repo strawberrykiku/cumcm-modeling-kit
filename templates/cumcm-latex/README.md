@@ -8,7 +8,7 @@
 2. 把 `main.tex` 的内容整体粘贴进去（或直接上传本文件）。
 3. 左上 **Menu → Compiler** 选 **XeLaTeX**（必须，含中文）。
 4. 点 Recompile，**连编两次**（生成页码与交叉引用）。
-5. 之后按 `math-modeling-paper` skill 依次输出的 `.tex` 代码块，逐块替换模板里的占位内容。
+5. 项目文件模式下直接上传整个 `solution/` 目录；`main.tex` 会通过 `tex/sections/*.tex` 拼接各章节。聊天模式才需要把 LaTeX 代码块逐块复制进模板。
 
 本机若已装 TeX Live / CTeX，也可 `xelatex main.tex` 连编两次。
 
@@ -26,7 +26,24 @@ python skills/math-modeling-paper/scripts/build_cumcm_project.py \
   --compile
 ```
 
-该命令先生成真实数据图，再组装 `main.tex`，检查占位符和插图路径；检测到 XeLaTeX 时自动编译两遍，并将状态写入 `solution/build_report.json`。输入字段和失败处理见 `skills/math-modeling-paper/references/project-contract.md`。
+该命令会把 `sections` 写入 `solution/tex/sections/*.tex`，把 `code_files` 写入 `solution/code/`，把 `figure_scripts` 写入 `solution/scripts/figures/`，把 `figure_data_files` 写入 `solution/figure_data/`，然后生成薄入口 `main.tex`。已存在的可编辑文件默认保留；需要覆盖时增加 `--overwrite`。检测到 XeLaTeX 时自动编译两遍，并将状态写入 `solution/build_report.json`。输入字段和失败处理见 `skills/math-modeling-paper/references/project-contract.md`。
+
+## 项目文件模式的可编辑目录
+
+```text
+solution/
+├── main.tex                         # 只负责 \\input 各分文件
+├── tex/preamble.tex                 # 导言区
+├── tex/sections/*.tex               # 每个论文部分一个文件
+├── code/                            # 每个子问题的完整程序
+├── scripts/figures/                 # 题目专用绘图代码
+├── figure_data/                     # 图表输入数据
+├── figures/                         # 生成的 SVG/PDF/PNG
+├── notes/                           # solver 阶段记录
+└── build_report.json
+```
+
+用户可以直接修改任意 section、程序或绘图脚本，再重新编译。重新运行构建器时，除非传入 `--overwrite`，它不会覆盖这些用户修改的源文件。
 
 ## 模板已固化的官方要求
 
@@ -50,7 +67,7 @@ python skills/math-modeling-paper/scripts/build_cumcm_project.py \
 - **题目**：准确概括研究对象与任务，别写成「2025 年数学建模 A 题论文」。
 - **摘要**：按「总述 + 分问 + 检验 + 总结」写，**每问必须给出关键量化结果**；不放公式图表；最后定稿。
 - **各章**：按注释里的规范提示写；`数据处理`、`模型推广` 两章按需，**没内容就整章删掉**。
-- **图片**：先按 `skills/math-modeling-paper/references/figure-generation.md` 建立 Figure Contract 和 `figure_manifest.json`，运行 `scripts/figure_pipeline.py` 生成 SVG/PDF/PNG，再把整个 `figures/` 目录上传到 Overleaf；正文中的每个图都必须用实际存在的文件名引用，不能保留缺失资源的 `\includegraphics` 占位行。
+- **图片**：先按 `skills/math-modeling-paper/references/figure-generation.md` 建立 Figure Contract，将绘图源代码保存到 `scripts/figures/`、输入数据保存到 `figure_data/`，再运行 `scripts/figure_pipeline.py` 生成 SVG/PDF/PNG；正文中的每个图都必须用实际存在的文件名引用，不能保留缺失资源的 `\includegraphics` 占位行。
 - **参考文献**：按正文首次出现顺序编号，正文标注与条目一一对应。
 - **附录**：列出支撑材料清单 + 完整可运行代码。没程序须写明「本论文没有用到程序」。
 

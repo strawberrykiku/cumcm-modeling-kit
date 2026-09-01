@@ -2,15 +2,65 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "CUMCM paper content contract",
   "type": "object",
-  "required": ["title", "abstract_tex", "keywords", "body_tex"],
+  "required": ["title", "abstract_tex", "keywords"],
+  "anyOf": [
+    {"required": ["sections"]},
+    {"required": ["body_tex"]}
+  ],
   "properties": {
     "title": {"type": "string", "minLength": 1},
     "abstract_tex": {"type": "string", "minLength": 1, "description": "Raw LaTeX abstract; do not include document markers."},
     "keywords": {"type": "string", "minLength": 1},
-    "body_tex": {"type": "string", "minLength": 1, "description": "Raw LaTeX from the first section through model evaluation."},
+    "body_tex": {"type": "string", "minLength": 1, "description": "Legacy monolithic LaTeX body. Prefer sections for editable projects."},
+    "sections": {
+      "type": "object",
+      "minProperties": 1,
+      "description": "Semantic section ID to raw LaTeX content. The builder writes one .tex file per entry.",
+      "additionalProperties": {"type": "string", "minLength": 1}
+    },
     "ai_statement": {"type": "string"},
     "bibliography_tex": {"type": "string"},
-    "appendix_tex": {"type": "string"}
+    "appendix_tex": {"type": "string"},
+    "code_files": {
+      "type": "array",
+      "description": "Question-level source files written below project/code/.",
+      "items": {
+        "type": "object",
+        "required": ["path", "content"],
+        "properties": {"path": {"type": "string", "minLength": 1}, "content": {"type": "string"}},
+        "additionalProperties": false
+      }
+    },
+    "figure_scripts": {
+      "type": "array",
+      "description": "Topic-specific plotting scripts written below project/scripts/figures/.",
+      "items": {
+        "type": "object",
+        "required": ["path", "content"],
+        "properties": {"path": {"type": "string", "minLength": 1}, "content": {"type": "string"}},
+        "additionalProperties": false
+      }
+    },
+    "figure_data_files": {
+      "type": "array",
+      "description": "Optional JSON/CSV text inputs written below project/figure_data/.",
+      "items": {
+        "type": "object",
+        "required": ["path", "content"],
+        "properties": {"path": {"type": "string", "minLength": 1}, "content": {"type": "string"}},
+        "additionalProperties": false
+      }
+    },
+    "notes_files": {
+      "type": "array",
+      "description": "Optional solver progress notes written below project/notes/.",
+      "items": {
+        "type": "object",
+        "required": ["path", "content"],
+        "properties": {"path": {"type": "string", "minLength": 1}, "content": {"type": "string"}},
+        "additionalProperties": false
+      }
+    }
   },
   "additionalProperties": false
 }

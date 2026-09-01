@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Reproducible CUMCM figure generator driven by a JSON manifest."""
+"""Reproducible CUMCM figure generator driven by a JSON manifest.
+
+This generator renders figures from manifest data.  It intentionally does not
+discover or execute arbitrary user plotting scripts; project mode stores those
+scripts separately under ``solution/scripts/figures/`` for inspection and
+explicit execution.
+"""
 from __future__ import annotations
 import argparse, csv, hashlib, json, re
 from pathlib import Path

@@ -6,6 +6,8 @@
 
 两个 skill 独立加载、独立触发。solver 完成建模后，输出论文草稿片段，用户切换到 paper skill 继续写作。草稿片段可直接嵌入论文对应章节。
 
+如果用户启用了项目文件模式，草稿片段和程序不只停留在对话中：solver 应同步写入 `solution/notes/`、`solution/tex/sections/` 和 `solution/code/`；paper skill 在这些文件上继续润色和补全。`[PAPER_READY]` 仍然只是交接标记，不会自动启动下一个 skill。
+
 ---
 
 ## 阶段输出 → 论文章节 映射表
@@ -91,6 +93,17 @@ Solver 在完成阶段4时，输出以下格式的切换信号：
 | 摘要 | — | 完整写作指导 |
 | 参考文献 | 提供文献检索结果和初步引用列表 | 格式和规范检查 |
 | 排版 | — | LaTeX/Word 检查清单 |
+
+### 项目文件映射
+
+| 内容 | 项目路径 |
+|------|---------|
+| 拆题/文献/选模/算法记录 | `solution/notes/*.md` |
+| 论文各部分 | `solution/tex/sections/*.tex` |
+| 各子问题程序 | `solution/code/` |
+| 题目专用绘图脚本 | `solution/scripts/figures/` |
+| 图表数据 | `solution/figure_data/` |
+| 可编译入口 | `solution/main.tex` |
 
 ---
 

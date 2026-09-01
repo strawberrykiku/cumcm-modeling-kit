@@ -71,6 +71,8 @@ solution/
 └── scripts/                 # 生成图的可运行脚本
 ```
 
+在项目文件模式下，题目专用绘图源码统一保存到 `scripts/figures/`，图表输入数据统一保存到 `figure_data/`；不要只把绘图代码留在聊天代码块中。仓库提供的 `figure_pipeline.py` 是生成器，不会监控目录，也不会擅自执行用户保存的绘图脚本。
+
 如果用户已有项目结构，保持其结构，只需建立等价映射。最终 `.tex` 中的 `\includegraphics` 必须引用实际存在的 `figures/` 文件。
 
 ## 4. 可执行生成器
@@ -94,7 +96,7 @@ python scripts/figure_pipeline.py \
 - `trajectory_3d`：三维轨迹；
 - `flowchart`：分层流程图。
 
-数据可以写在 manifest 的 `data` 字段中，也可以由 `source` 指向 JSON 文件。生成器不允许缺少数据、轴标签或图题；对于定量图，输入数据长度不一致会直接报错。
+数据可以写在 manifest 的 `data` 字段中，也可以由 `source` 指向 JSON 文件。生成器不允许缺少数据或图题；对于定量图，输入数据长度不一致会直接报错。轴标签、`evidence` 和 `section` 仍须由作者在 manifest 和代码审查中确认。
 
 ## 5. 论文插图映射
 

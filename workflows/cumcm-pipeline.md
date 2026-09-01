@@ -68,7 +68,7 @@
 
 ## 排版成 PDF
 
-论文正文写完后，用仓库自带的 `templates/cumcm-latex/main.tex`（匿名版国赛模板）排版：把各章内容填进去，用 **XeLaTeX 连编两次**。编译说明与依赖见 `templates/cumcm-latex/README.md`。交卷前用 `cumcm-award-gate` 的 `pdf_qa.sh --anonymous` 扫一遍匿名性。
+论文正文写完后，先执行 `workflows/figure-pipeline.md`：从真实模型输出生成 `figures/` 下的 SVG/PDF/PNG，并将所有图复制到最终论文项目。然后用仓库自带的 `templates/cumcm-latex/main.tex`（匿名版国赛模板）排版：把各章内容和实际 `\\includegraphics` 引用填进去，用 **XeLaTeX 连编两次**。编译说明与依赖见 `templates/cumcm-latex/README.md`。交卷前用 `cumcm-award-gate` 的 `pdf_qa.sh --anonymous` 扫一遍匿名性。
 
 ## 安装与加载
 

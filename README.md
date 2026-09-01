@@ -66,7 +66,7 @@ npx skills add strawberrykiku/cumcm-modeling-kit --skill '*'
 
 ### 是不是丢给它题目就行？
 
-大致是——但它是**分步陪跑的助手，不是一键出论文的机器**。
+大致是——默认仍按阶段陪跑；当 solver/paper 已产出内容契约时，也支持一键生成图表、`main.tex` 和编译报告。
 
 1. 直接**粘贴赛题文本**，`math-modeling-solver` 通常会自动触发；没触发就明说："用 math-modeling-solver 解这道题"。
 2. 它先确认：**国赛还是美赛、偏好 Python 还是 MATLAB**。
@@ -90,7 +90,23 @@ npx skills add strawberrykiku/cumcm-modeling-kit --skill '*'
 
 ### 它不会替你做的
 
-- **不会一键生成排版好、能直接交的成品 PDF**——但仓库自带 `templates/cumcm-latex/`（匿名版国赛 LaTeX 模板 + 编译说明），把 paper 生成的各章内容填进去、用 XeLaTeX 连编两次即可；最后这步的组装与编译由你（在它帮助下）完成。
+- **不会凭空替你发明模型结论或数据**——但在提供 `paper_content.json` 和 `figure_manifest.json` 后，可以用 `build_cumcm_project.py` 自动生成图表、组装匿名版 `main.tex`，并在本机有 XeLaTeX 时连编两次。
+
+### 一键生成论文项目
+
+paper 阶段完成后，将摘要、正文 LaTeX、AI 声明、参考文献和附录写入 `paper_content.json`；将真实数据图的 Figure Contract 写入 `figure_manifest.json`。然后运行：
+
+```bash
+python skills/math-modeling-paper/scripts/build_cumcm_project.py \\
+  --project ./solution \\
+  --content ./paper_content.json \\
+  --template ./templates/cumcm-latex/main.tex \\
+  --manifest ./figure_manifest.json \\
+  --formats svg,pdf,png \\
+  --compile
+```
+
+构建器会拒绝占位符和缺失插图，生成 `solution/main.tex`、`solution/figures/`、`solution/build_report.json`，并在没有 XeLaTeX 时提示使用 Overleaf。输入契约见 `skills/math-modeling-paper/references/project-contract.md`，图表规范见 `skills/math-modeling-paper/references/figure-generation.md`。
 - 替不了你理解：评审会查代码与论文一致性、也看 AI 痕迹，比赛是你自己的作品。它加速你、兜住漏洞，但你得看懂并对交出去的东西负责。
 
 ## 致谢与许可

@@ -113,6 +113,24 @@ description: 数学建模竞赛论文写作全流程指导。覆盖国赛(CUMCM)
 
 当用户要求“直接生成论文文件”而不是只要代码块时，完成分块写作后必须将模板与全部正文、公式、表格和实际插图引用组装为项目目录中的 `main.tex`；不得只把 LaTeX 显示在聊天里。若环境可运行 XeLaTeX，则编译两次并修复缺失图片、字体、引用和占位符错误；否则输出可复制的 `main.tex` 与明确的编译命令。
 
+### Step 6: 一键构建论文项目（用户要求自动交付时）
+
+当用户要求“完整生成论文文件”“一键完成”或“不要只输出代码块”时，使用 `scripts/build_cumcm_project.py`，而不是手工复制模板。输入是 `paper_content.json`（摘要、正文 LaTeX、AI 声明、参考文献和附录）以及可选的 `figure_manifest.json`；输出到项目目录的 `main.tex`、`figures/`、`build_report.json` 和编译日志。
+
+```bash
+python skills/math-modeling-paper/scripts/build_cumcm_project.py \\
+  --project ./solution \\
+  --content ./paper_content.json \\
+  --template ./templates/cumcm-latex/main.tex \\
+  --manifest ./figure_manifest.json \\
+  --formats svg,pdf,png \\
+  --compile
+```
+
+构建器会先生成图表，再组装模板，拒绝占位符和缺失图片引用；发现 XeLaTeX 时自动编译两遍，否则明确提示使用 Overleaf XeLaTeX。输入契约与失败处理见 `references/project-contract.md`。
+
+paper 阶段在用户要求完整文件交付时，应同时把已完成内容落成 `paper_content.json`，而不是只在聊天里分块展示。`body_tex` 中直接放完整正文和实际图表引用；构建器会负责套用模板的导言区、补齐 AI 声明/参考文献/附录区并生成最终 `main.tex`。
+
 ---
 
 ## 论文结构模板
@@ -386,6 +404,7 @@ description: 数学建模竞赛论文写作全流程指导。覆盖国赛(CUMCM)
 - `references/problem-type-strategies.md` — A/B/C 题差异化策略
 - `references/figure-and-code-guide.md` — 图表规范与代码附录要求
 - `references/figure-generation.md` — Figure Contract、图表类型路由、数据驱动绘图、LaTeX 插图映射和生成后检查
+- `references/project-contract.md` — 一键论文项目构建的 `paper_content.json` 契约、命令和硬性检查
 - `references/memo-writing.md` — 美赛 Memo/Letter 写作指导
 - `references/de-ai-writing.md` — 去 AI 味写作指南（八类 AI 痕迹识别 + 注入真实感 + 数模专用规范）
 - `references/self-review-framework.md` — 四轮自审框架（论证逻辑→章节结构→表述质量→格式规范）

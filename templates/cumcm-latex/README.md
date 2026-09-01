@@ -12,6 +12,22 @@
 
 本机若已装 TeX Live / CTeX，也可 `xelatex main.tex` 连编两次。
 
+## 一键构建（推荐用于自动化项目）
+
+如果项目同时提供 `paper_content.json` 和 `figure_manifest.json`，可从仓库根目录运行：
+
+```bash
+python skills/math-modeling-paper/scripts/build_cumcm_project.py \
+  --project ./solution \
+  --content ./paper_content.json \
+  --template ./templates/cumcm-latex/main.tex \
+  --manifest ./figure_manifest.json \
+  --formats svg,pdf,png \
+  --compile
+```
+
+该命令先生成真实数据图，再组装 `main.tex`，检查占位符和插图路径；检测到 XeLaTeX 时自动编译两遍，并将状态写入 `solution/build_report.json`。输入字段和失败处理见 `skills/math-modeling-paper/references/project-contract.md`。
+
 ## 模板已固化的官方要求
 
 无需你手动设置，导言区已处理：

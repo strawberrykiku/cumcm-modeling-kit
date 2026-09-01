@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CUMCM paper content contract",
+  "type": "object",
+  "required": ["title", "abstract_tex", "keywords", "body_tex"],
+  "properties": {
+    "title": {"type": "string", "minLength": 1},
+    "abstract_tex": {"type": "string", "minLength": 1, "description": "Raw LaTeX abstract; do not include document markers."},
+    "keywords": {"type": "string", "minLength": 1},
+    "body_tex": {"type": "string", "minLength": 1, "description": "Raw LaTeX from the first section through model evaluation."},
+    "ai_statement": {"type": "string"},
+    "bibliography_tex": {"type": "string"},
+    "appendix_tex": {"type": "string"}
+  },
+  "additionalProperties": false
+}

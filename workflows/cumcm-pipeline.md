@@ -66,6 +66,21 @@
 4. 附录代码跑不起来、或和论文不一致 →（清单 F，可能直接取消资格）
 5. 论文里漏了学校/姓名没匿名 →（清单 H）
 
+## 一键项目构建
+
+当 solver 和 paper 已经产出 `paper_content.json` 与 `figure_manifest.json`，可直接运行：
+
+```bash
+python skills/math-modeling-paper/scripts/build_cumcm_project.py \\
+  --project ./solution \\
+  --content ./paper_content.json \\
+  --template ./templates/cumcm-latex/main.tex \\
+  --manifest ./figure_manifest.json \\
+  --compile
+```
+
+构建器负责生成图表、组装 `main.tex`、检查占位符和插图路径，并在有 XeLaTeX 时编译两遍；详细输入契约见 `skills/math-modeling-paper/references/project-contract.md`。
+
 ## 排版成 PDF
 
 论文正文写完后，先执行 `workflows/figure-pipeline.md`：从真实模型输出生成 `figures/` 下的 SVG/PDF/PNG，并将所有图复制到最终论文项目。然后用仓库自带的 `templates/cumcm-latex/main.tex`（匿名版国赛模板）排版：把各章内容和实际 `\\includegraphics` 引用填进去，用 **XeLaTeX 连编两次**。编译说明与依赖见 `templates/cumcm-latex/README.md`。交卷前用 `cumcm-award-gate` 的 `pdf_qa.sh --anonymous` 扫一遍匿名性。
